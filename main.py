@@ -5,16 +5,17 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "This is Avraham page <h1>Title<h1>"
+    return "This is home page <h1>Title<h1>"
 
 
 @app.route("/<name>")
 def user(name):
     return f"Hello {name}!"
 
+
 @app.route("/admin")
 def admin():
-    return redirect(url_for("homdfsdf"))
+    return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
