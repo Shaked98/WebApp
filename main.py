@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, redirect, url_for, render_template, request
 
 app = Flask(__name__)
 
@@ -8,9 +8,10 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/search")
+@app.route('/', methods=['POST'])
 def search():
-    return render_template("base.html")
+    movie = request.form['movie']
+    return movie
 
 
 if __name__ == "__main__":
