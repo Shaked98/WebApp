@@ -2,7 +2,12 @@
 
 {% block content %}
 
-    <h6>Showing Results For...</h6>
-    <p>{{ search }}</p>
+    <h1>Showing Results For...</h1>
+
+    <body>
+    {% for x in content %}
+        <p>{{x}}</p>
+    {% endfor %}
+    </body>
 
 {% endblock %}
