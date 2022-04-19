@@ -1,7 +1,8 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, json, Response
 import imdb, os
 import requests
 from config import KEY
+from pymongo import MongoClient
 
 app = Flask(__name__)
 
@@ -81,10 +82,11 @@ def search():
 
 
 # show the results of the search method
-@app.route('/search')
+@app.route('/search', methods=["GET"])
 def results():
-    tmdb_posters('tt0095016')
+    #tmdb_posters('414906')
     ia = imdb.IMDb()
+    global search
     search = ia.search_movie(movie)
     return render_template("search.html", content=search)
 
