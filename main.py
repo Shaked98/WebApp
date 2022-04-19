@@ -15,13 +15,13 @@ def _get_json(url):
     return r.json()
 
 
-def _download_images(urls, path='.'):
+def _download_images(urls, path='./pics'):
     """download all images in list 'urls' to 'path' """
 
     for nr, url in enumerate(urls):
         r = requests.get(url)
         filetype = r.headers['content-type'].split('/')[-1]
-        filename = 'poster_{0}.{1}'.format(nr + 1, filetype)
+        filename = '{0}_{1}.{2}'.format(movie_id, nr + 1, filetype)
         filepath = os.path.join(path, filename)
         with open(filepath, 'wb') as w:
             w.write(r.content)
@@ -61,7 +61,7 @@ def get_poster_urls(imdbid):
     return poster_urls
 
 
-def tmdb_posters(imdbid, count=None, outpath='.'):
+def tmdb_posters(imdbid, count=None, outpath='./pics'):
     urls = get_poster_urls(imdbid)
     if count is not None:
         urls = urls[:count]
@@ -88,17 +88,20 @@ def results():
     global search
     search = ia.search_movie(movie)
 
-    if request.method == "POST":
-        pass
-
     return render_template("search.html", content=search)
 
 
-@app.route('/search', methods=["GET", "POST"])
+@app.route('/search/download', methods=["GET", "POST"])
 def download():
-    # takes ID of first Movie found.
-    movie_id = "tt" + search[0].movieID
-    tmdb_posters(movie_id)
+    if request.method == 'POST':
+        # receive Movie ID list
+        download = request.form.getlist('movieID')
+        # download all the chosen movies.
+        global movie_id
+        for movie_id in download:
+            tmdb_posters(movie_id)
+        return render_template("download.html")
+
 
 if __name__ == "__main__":
     app.run()
