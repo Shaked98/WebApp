@@ -7,18 +7,17 @@
     <body>
     <form action="/search/download" method="POST">
     <div>
-    {% for x in content %}
-
-        <p>{{x}} ID:{{x.movieID}}</p>
-        <input type="checkbox" id={{x.movieID}} name="movieID" value=tt{{x.movieID}}>
-
+    {% for movie_name, condition in content %}
+        <p>{{movie_name}} ID:{{movie_name.movieID}}</p>
+        {% if condition %}
+        <image src="{{ url_for('static', filename='./tt1300854_1.jpeg')}}">
+        {% endif %}
+        <input type="checkbox" id={{movie_name.movieID}} name="movieID" value=tt{{movie_name.movieID}}>
     {% endfor %}
-                <div class="control">
-
-                                <button class="button is-block is-info is-large is-fullwidth" >Download</button>
+        <div class="control">
+                <button class="button is-block is-info is-large is-fullwidth" >Download</button>
     </form>
-                </div>
+        </div>
     </div>
     </body>
-
 {% endblock %}

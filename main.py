@@ -3,6 +3,7 @@ import imdb, os
 import requests
 from config import KEY
 from pymongo import MongoClient
+import os.path
 
 app = Flask(__name__)
 
@@ -53,10 +54,10 @@ def get_poster_urls(imdbid):
 
     posters = _get_json(IMG_PATTERN.format(key=KEY, imdbid=imdbid))['posters']
     poster_urls = []
-    for poster in posters:
-        rel_path = poster['file_path']
-        url = "{0}{1}{2}".format(base_url, max_size, rel_path)
-        poster_urls.append(url)
+    poster = posters[0]
+    rel_path = poster['file_path']
+    url = "{0}{1}{2}".format(base_url, max_size, rel_path)
+    poster_urls.append(url)
 
     return poster_urls
 
@@ -86,9 +87,24 @@ def search():
 def results():
     ia = imdb.IMDb()
     global search
+    global my_list
     search = ia.search_movie(movie)
+    # my list has the conditions, if true the file exists.
+    my_list = []
 
-    return render_template("search.html", content=search)
+    # making a list of True/False
+    for key in search:
+        file_exists = os.path.exists(f'./static/tt{key.movieID}_1.jpeg')
+        my_list.append(file_exists)
+
+    global my_zip
+    my_zip = list(zip(search, my_list))
+
+    for name, condition in my_zip:
+        print("Movie Name:", name)
+        print("Movie ID:", name.movieID)
+        print("Movie Condition:", condition)
+    return render_template("search.html", content=my_zip, condition=my_zip)
 
 
 @app.route('/search/download', methods=["GET", "POST"])
