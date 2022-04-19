@@ -5,18 +5,18 @@
     <h1>Showing Results For...</h1>
 
     <body>
-
+    <form action="/search/download" method="POST">
     <div>
     {% for x in content %}
 
         <p>{{x}} ID:{{x.movieID}}</p>
-        <input type="checkbox" id={{x.movieID}} name={{x}} value=("tt"+{{x.movieID}})>
+        <input type="checkbox" id={{x.movieID}} name="movieID" value=tt{{x.movieID}}>
 
     {% endfor %}
                 <div class="control">
-                        <form action="#" method="POST">
+
                                 <button class="button is-block is-info is-large is-fullwidth" >Download</button>
-                        </form>
+    </form>
                 </div>
     </div>
     </body>
