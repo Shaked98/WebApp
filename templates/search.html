@@ -5,9 +5,20 @@
     <h1>Showing Results For...</h1>
 
     <body>
+
+    <div>
     {% for x in content %}
-        <p>{{x}}</p>
+
+        <p>{{x}} ID:{{x.movieID}}</p>
+        <input type="checkbox" id={{x.movieID}} name={{x}} value=("tt"+{{x.movieID}})>
+
     {% endfor %}
+                <div class="control">
+                        <form action="#" method="POST">
+                                <button class="button is-block is-info is-large is-fullwidth" >Download</button>
+                        </form>
+                </div>
+    </div>
     </body>
 
 {% endblock %}

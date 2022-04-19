@@ -81,15 +81,24 @@ def search():
     return redirect(url_for("results"))
 
 
-# show the results of the search method
-@app.route('/search', methods=["GET"])
+# show the images and results of the search method
+@app.route('/search', methods=["GET", "POST"])
 def results():
-    #tmdb_posters('414906')
     ia = imdb.IMDb()
     global search
     search = ia.search_movie(movie)
+
+    if request.method == "POST":
+        pass
+
     return render_template("search.html", content=search)
 
+
+@app.route('/search', methods=["GET", "POST"])
+def download():
+    # takes ID of first Movie found.
+    movie_id = "tt" + search[0].movieID
+    tmdb_posters(movie_id)
 
 if __name__ == "__main__":
     app.run()
