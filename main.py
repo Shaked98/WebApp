@@ -86,35 +86,34 @@ def search():
 @app.route('/search', methods=["GET", "POST"])
 def results():
     ia = imdb.IMDb()
-    global search
-    global my_list
-    search = ia.search_movie(movie)
-    # my list has the conditions, if true the file exists.
+    movies_list = ia.search_movie(movie)
+
+    # my list has the conditions of movies, if true the file exists.
     my_list = []
 
     # making a list of True/False
-    for key in search:
+    for key in movies_list:
         file_exists = os.path.exists(f'./static/tt{key.movieID}_1.jpeg')
         my_list.append(file_exists)
 
-    global my_zip
-    my_zip = list(zip(search, my_list))
+    my_zip = list(zip(movies_list, my_list))
 
-    for name, condition in my_zip:
-        print("Movie Name:", name)
-        print("Movie ID:", name.movieID)
-        print("Movie Condition:", condition)
-    return render_template("search.html", content=my_zip, condition=my_zip)
+    # for name, condition in my_zip:
+    #    print("Movie Name:", name)
+    #    print("Movie ID:", name.movieID)
+    #    print("Movie Condition:", condition)
+
+    return render_template("search.html", content=my_zip)
 
 
 @app.route('/search/download', methods=["GET", "POST"])
 def download():
     if request.method == 'POST':
         # receive Movie ID list
-        download = request.form.getlist('movieID')
+        movie_id_list = request.form.getlist('movieID')
         # download all the chosen movies.
         global movie_id
-        for movie_id in download:
+        for movie_id in movie_id_list:
             tmdb_posters(movie_id)
         return render_template("download.html")
 
