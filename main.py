@@ -16,7 +16,7 @@ def _get_json(url):
     return r.json()
 
 
-def _download_images(urls, path='./pics'):
+def _download_images(urls, path='./static'):
     """download all images in list 'urls' to 'path' """
 
     for nr, url in enumerate(urls):
@@ -62,7 +62,7 @@ def get_poster_urls(imdbid):
     return poster_urls
 
 
-def tmdb_posters(imdbid, count=None, outpath='./pics'):
+def tmdb_posters(imdbid, count=None, outpath='./static'):
     urls = get_poster_urls(imdbid)
     if count is not None:
         urls = urls[:count]
