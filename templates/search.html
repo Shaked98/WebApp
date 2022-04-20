@@ -10,7 +10,7 @@
     {% for movie_name, condition in content %}
         <p>{{movie_name}} ID:{{movie_name.movieID}}</p>
         {% if condition %}
-        <image src="{{ url_for('static', filename='./tt1300854_1.jpeg')}}">
+        <image src="{{ url_for('static', filename='./tt' + movie_name.movieID + '_1.jpeg')}}">
         {% endif %}
         <input type="checkbox" id={{movie_name.movieID}} name="movieID" value=tt{{movie_name.movieID}}>
     {% endfor %}
