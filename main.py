@@ -193,7 +193,7 @@ def show_poster(name):
     my_id = data['_id']
     fs = gridfs.GridFS(db)
     my_poster = fs.get(my_id).read()
-    response.content = 'image/jpeg'
+    # response.content = 'image/jpeg'
     return my_poster
 
 
