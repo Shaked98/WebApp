@@ -1,9 +1,10 @@
 from flask import Flask, redirect, url_for, render_template, request, json, Response
 import imdb, os
-import requests
 from config import KEY
-from pymongo import MongoClient
 import os.path
+import gridfs
+import requests
+from pymongo import MongoClient
 
 app = Flask(__name__)
 
@@ -11,21 +12,78 @@ CONFIG_PATTERN = 'http://api.themoviedb.org/3/configuration?api_key={key}'
 IMG_PATTERN = 'http://api.themoviedb.org/3/movie/{imdbid}/images?api_key={key}'
 
 
-def _get_json(url):
-    r = requests.get(url)
-    return r.json()
+def download_object(urls):
+    """ save the images in a binary object named "contents" """
+    for nr, url in enumerate(urls):
+        r = requests.get(url)
+        contents = r.content
+        return contents
 
 
 def _download_images(urls, path='./static'):
     """download all images in list 'urls' to 'path' """
 
     for nr, url in enumerate(urls):
-        r = requests.get(url)
-        filetype = r.headers['content-type'].split('/')[-1]
-        filename = '{0}_{1}.{2}'.format(movie_id, nr + 1, filetype)
-        filepath = os.path.join(path, filename)
-        with open(filepath, 'wb') as w:
-            w.write(r.content)
+        if nr == 0:
+            r = requests.get(url)
+            print(r)
+            filetype = r.headers['content-type'].split('/')[-1]
+            filename = '{0}_{1}.{2}'.format(movie_id, nr + 1, filetype)
+            filepath = os.path.join(path, filename)
+            with open(filepath, 'wb') as w:
+                w.write(r.content)
+
+
+def mongo_conn():
+    try:
+        conn = MongoClient(host='127.0.0.1', port=27017)
+        print("MongoDB connected", conn)
+        return conn.postersDB
+
+    except Exception as e:
+        print("Error in mongo connection:", e)
+
+
+# connects to database "posters"
+db = mongo_conn()
+
+
+# download image from imdb straight into mongo
+# takes movie_id as 'str' e.g: 'tt4154796'
+def download_to_mongo(movie_id, count=None, outpath='./static'):
+    urls = get_poster_urls(movie_id)
+    if count is not None:
+        urls = urls[:count]
+    data = download_object(urls)
+    fs = gridfs.GridFS(db)
+    fs.put(data, filename=movie_id)
+    print("upload complete")
+
+
+def tmdb_posters(imdbid, count=None, outpath='./static'):
+    urls = get_poster_urls(imdbid)
+    if count is not None:
+        urls = urls[:count]
+    _download_images(urls, outpath)
+
+
+# download_to_mongo("tt0371746")
+# first parameter is the download location including the name extension
+# second parameter is the file name to search in mongo
+def download_from_mongo(download_location, name):
+    data = db.fs.files.find_one({'filename': name})
+    my_id = data['_id']
+    fs = gridfs.GridFS(db)
+    outputdata = fs.get(my_id).read()
+    output = open(download_location, "wb")
+    output.write(outputdata)
+    output.close()
+    print("Download complete")
+
+
+def _get_json(url):
+    r = requests.get(url)
+    return r.json()
 
 
 def get_poster_urls(imdbid):
@@ -54,19 +112,12 @@ def get_poster_urls(imdbid):
 
     posters = _get_json(IMG_PATTERN.format(key=KEY, imdbid=imdbid))['posters']
     poster_urls = []
-    poster = posters[0]
-    rel_path = poster['file_path']
-    url = "{0}{1}{2}".format(base_url, max_size, rel_path)
-    poster_urls.append(url)
+    for poster in posters:
+        rel_path = poster['file_path']
+        url = "{0}{1}{2}".format(base_url, max_size, rel_path)
+        poster_urls.append(url)
 
     return poster_urls
-
-
-def tmdb_posters(imdbid, count=None, outpath='./static'):
-    urls = get_poster_urls(imdbid)
-    if count is not None:
-        urls = urls[:count]
-    _download_images(urls, outpath)
 
 
 @app.route("/")
@@ -87,35 +138,41 @@ def search():
 def results():
     ia = imdb.IMDb()
     movies_list = ia.search_movie(movie)
-
+    global movie_id
     # my list has the conditions of movies, if true the file exists.
     my_list = []
+    movies_id_list = []
+    for key in movies_list:
+        movies_id_list.append('tt'+key.movieID)
+
+    for movie_id in movies_id_list:
+        try:
+            if db.fs.files.count_documents({'filename': movie_id}):
+                continue
+            else:
+                download_to_mongo(movie_id)
+        except:
+            continue
 
     # making a list of True/False
     for key in movies_list:
         file_exists = os.path.exists(f'./static/tt{key.movieID}_1.jpeg')
         my_list.append(file_exists)
-
     my_zip = list(zip(movies_list, my_list))
-
-    # for name, condition in my_zip:
-    #    print("Movie Name:", name)
-    #    print("Movie ID:", name.movieID)
-    #    print("Movie Condition:", condition)
-
     return render_template("search.html", content=my_zip)
 
 
 @app.route('/search/download', methods=["GET", "POST"])
 def download():
-    if request.method == 'POST':
-        # receive Movie ID list
-        movie_id_list = request.form.getlist('movieID')
-        # download all the chosen movies.
-        global movie_id
-        for movie_id in movie_id_list:
-            tmdb_posters(movie_id)
-        return render_template("download.html")
+    # receive Movie ID list
+    movie_id_list = request.form.getlist('movieID')
+    # downloads all the chosen posters to local machine
+    for movie_id in movie_id_list:
+        try:
+            download_from_mongo(f"./pics/{movie_id}"+'.jpeg', movie_id)
+        except:
+            continue
+    return render_template("download.html")
 
 
 if __name__ == "__main__":
