@@ -5,6 +5,7 @@ import os.path
 import gridfs
 import requests
 from pymongo import MongoClient
+from bottle import response, route
 
 app = Flask(__name__)
 
@@ -143,7 +144,7 @@ def results():
     my_list = []
     movies_id_list = []
     for key in movies_list:
-        movies_id_list.append('tt'+key.movieID)
+        movies_id_list.append('tt' + key.movieID)
 
     for movie_id in movies_id_list:
         try:
@@ -153,11 +154,22 @@ def results():
                 download_to_mongo(movie_id)
         except:
             continue
+    """ This block is extremely important, it makes a list of the possible posters to download"""
+    for movie_id in movies_id_list:
+        try:
+            data = db.fs.files.find_one({'filename': movie_id})
+            my_id = data['_id']
+            fs = gridfs.GridFS(db)
+            my_poster = (fs.get(my_id).read())
+            my_poster = len(my_poster)
+            if db.fs.files.count_documents({'filename': movie_id}) and my_poster:
+                my_list.append(True)
+                continue
+            else:
+                my_list.append(False)
+        except:
+            my_list.append(False)
 
-    # making a list of True/False
-    for key in movies_list:
-        file_exists = os.path.exists(f'./static/tt{key.movieID}_1.jpeg')
-        my_list.append(file_exists)
     my_zip = list(zip(movies_list, my_list))
     return render_template("search.html", content=my_zip)
 
@@ -169,10 +181,20 @@ def download():
     # downloads all the chosen posters to local machine
     for movie_id in movie_id_list:
         try:
-            download_from_mongo(f"./pics/{movie_id}"+'.jpeg', movie_id)
+            download_from_mongo(f"./pics/{movie_id}" + '.jpeg', movie_id)
         except:
             continue
     return render_template("download.html")
+
+
+@app.route('/posters/<name>')
+def show_poster(name):
+    data = db.fs.files.find_one({'filename': name})
+    my_id = data['_id']
+    fs = gridfs.GridFS(db)
+    my_poster = fs.get(my_id).read()
+    response.content = 'image/jpeg'
+    return my_poster
 
 
 if __name__ == "__main__":
