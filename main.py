@@ -1,16 +1,19 @@
 from flask import Flask, redirect, url_for, render_template, request, json, Response
-import imdb, os
+import imdb
+import os
 from config import KEY
 import os.path
 import gridfs
 import requests
+from pathlib import Path
 from pymongo import MongoClient
-from bottle import response, route
+# from bottle import response, route
 
 app = Flask(__name__)
 
 CONFIG_PATTERN = 'http://api.themoviedb.org/3/configuration?api_key={key}'
 IMG_PATTERN = 'http://api.themoviedb.org/3/movie/{imdbid}/images?api_key={key}'
+LOCAL_DOWNLOAD_DIR_NAME = "pics"
 
 
 def download_object(urls):
@@ -176,12 +179,17 @@ def results():
 
 @app.route('/search/download', methods=["GET", "POST"])
 def download():
+
+    # create the directory if it does not exist
+    Path(f"./{LOCAL_DOWNLOAD_DIR_NAME}").mkdir(exist_ok=True)
+
+
     # receive Movie ID list
     movie_id_list = request.form.getlist('movieID')
     # downloads all the chosen posters to local machine
     for movie_id in movie_id_list:
         try:
-            download_from_mongo(f"./pics/{movie_id}" + '.jpeg', movie_id)
+            download_from_mongo(f"./{LOCAL_DOWNLOAD_DIR_NAME}/{movie_id}" + '.jpeg', movie_id)
         except:
             continue
     return render_template("download.html")

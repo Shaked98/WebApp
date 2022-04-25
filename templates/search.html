@@ -2,9 +2,12 @@
 
 {% block content %}
 
-    <h1>Showing Results For...</h1>
 
     <body>
+
+    <h1>CinemApp - Cinema Posters Downloader</h1>
+    <h2>Showing Results For...</h2>
+
     <form action="/search/download" method="POST">
     <div>
     {% for movie_name, condition in content %}
