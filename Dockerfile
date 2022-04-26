@@ -1,13 +1,13 @@
-FROM node:16-alpine
+FROM python:alpine
+
+COPY . ./app
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY requirements.txt /requirements.txt
 
-RUN npm ci
+RUN pip install -r /requirements.txt;
 
-COPY . ./
+ENTRYPOINT [ "python" ]
 
-RUN npm run build && npm prune --production
-
-ENTRYPOINT ["node", "start"]
+CMD ["main.py"]
