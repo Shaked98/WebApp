@@ -40,7 +40,7 @@ def _download_images(urls, path='./static'):
 
 def mongo_conn():
     try:
-        conn = MongoClient(host='127.0.0.1', port=27017)
+        conn = MongoClient(host='172.18.0.1', port=27017)
         print("MongoDB connected", conn)
         return conn.postersDB
 
@@ -215,4 +215,4 @@ def show_poster(name):
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
-# last update before integration and dockerization.
+# Dockerization completed
