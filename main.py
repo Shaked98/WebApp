@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, json, Response
+from flask import Flask, redirect, url_for, render_template, request, json, Response, send_file
 import imdb
 import os
 from config import KEY
@@ -191,13 +191,14 @@ def download():
     # create the directory if it does not exist
     Path(f"./{LOCAL_DOWNLOAD_DIR_NAME}").mkdir(exist_ok=True)
 
-
     # receive Movie ID list
     movie_id_list = request.form.getlist('movieID')
     # downloads all the chosen posters to local machine
     for movie_id in movie_id_list:
         try:
             download_from_mongo(f"./{LOCAL_DOWNLOAD_DIR_NAME}/{movie_id}" + '.jpeg', movie_id)
+            path = f'./pics/{movie_id}' + '.jpeg'
+            return send_file(path, as_attachment=True)
         except:
             continue
     return render_template("download.html")
