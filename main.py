@@ -51,6 +51,8 @@ def mongo_conn():
 # connects to database "posters"
 db = mongo_conn()
 
+## print("db", db)
+
 
 # download image from imdb straight into mongo
 # takes movie_id as 'str' e.g: 'tt4154796'
@@ -134,6 +136,8 @@ def search():
     # movie name
     global movie
     movie = request.form['movie']
+    ## hostname = "google.com"  # example
+    ## response = os.system("ping -c 1 " + hostname)
     return redirect(url_for("results"))
 
 
@@ -152,10 +156,13 @@ def results():
     for movie_id in movies_id_list:
         try:
             if db.fs.files.count_documents({'filename': movie_id}):
+                ## print("db1")
                 continue
             else:
+                ## print("db2")
                 download_to_mongo(movie_id)
-        except:
+        except Exception as e:
+            print("exception", e)
             continue
     """ This block is extremely important, it makes a list of the possible posters to download"""
     for movie_id in movies_id_list:
@@ -206,6 +213,6 @@ def show_poster(name):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
 
 # last update before integration and dockerization.
