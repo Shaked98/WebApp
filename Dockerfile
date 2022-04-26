@@ -1,24 +1,25 @@
+# FROM python:alpine
 #
-# FROM node:16-alpine
+# COPY . ./app
 #
 # WORKDIR /app
 #
-# COPY package.json package-lock.json ./
+# COPY requirements.txt /requirements.txt
 #
-# RUN npm ci
+# RUN pip install -r /requirements.txt;
 #
-# COPY . ./
+# ENTRYPOINT [ "python" ]
 #
-# RUN npm run build && npm prune --production
-#
-# ENTRYPOINT ["node", "start"]
+# CMD ["main.py"]
+
 
 
 
 #FROM python:3.11.0a7-alpine3.15 #  Error: Please make sure the libxml2 and libxslt development packages are installed.
+#FROM python:3.6
 FROM python:alpine
 
-COPY . .
+COPY . /app
 
 #RUN apk add --no-cache --virtual .build-deps build-base
 #RUN apk add --no-cache openldap-dev libxml2-dev libxslt-dev
@@ -34,8 +35,8 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-EXPOSE 5000
+# EXPOSE 5050
 
 #ENTRYPOINT [ "python" ]
 
-CMD ["python3", "-u", "main.py"]
+# CMD ["python3", "-u", "main.py"]
