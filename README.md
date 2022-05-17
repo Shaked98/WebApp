@@ -1,8 +1,9 @@
 # Project: Web App using Python + Flask + MongoDB + Docker + Cloud
 
-                                                        Architecture:
-![Architecture](https://user-images.githubusercontent.com/82024584/168107143-83bc9c12-6727-487d-8f61-93628ea6d28d.PNG)
+# Architecture:
+<img src="https://user-images.githubusercontent.com/82024584/168107143-83bc9c12-6727-487d-8f61-93628ea6d28d.PNG" width="900" height="900">
 # Demo
+
 ![ProjectDemoGIF800](https://user-images.githubusercontent.com/82024584/168753125-3f54a942-a2f2-4795-bf0e-0eb313374416.gif)
 
 
