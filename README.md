@@ -15,4 +15,4 @@ The app asks the user for a movie to search. After taking the input from the use
 
 # Flow Chart:
 
-![FlowChart](https://user-images.githubusercontent.com/82024584/168765143-16facf25-dbaa-4dd8-85ac-c48c5b848275.PNG)
+![Webp net-resizeimage](https://user-images.githubusercontent.com/82024584/168773066-e11c01c6-74a8-4721-920a-bc14a6cb387e.png)
