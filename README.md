@@ -3,6 +3,11 @@
 # Architecture:
 ![Webp net-resizeimage](https://user-images.githubusercontent.com/82024584/168758266-01a542f5-d597-47af-902f-43ef0413fa2c.png)
 
+![Webp net-resizeimage (1)](https://user-images.githubusercontent.com/82024584/168758451-9ed4b85e-bd49-4681-beb7-3e8fc68b710e.png)
+
+![Webp net-resizeimage](https://user-images.githubusercontent.com/82024584/168758568-20ea439b-5830-4913-a457-581e43dbd5a0.png)
+
+
 
 # Demo
 
