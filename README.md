@@ -1,9 +1,16 @@
-# Project: Web App using Python + Flask + MongoDB + Docker + Cloud
+# Project: Web App using Python + Flask + MongoDB + Docker + AWS Cloud
 
 # Summary:
 
-The Project is a Web App. The Web App is about searching movie posters and having the option to download them through UI.
-The app asks the user for a movie to search. After taking the input from the user, the app displays all the movies names and their corresponding poster images. Then the customer gets a choice to select posters he wants to download, after selecting the images will be downloaded to the user computer.
+The Project is a Web App.
+
+The Web App gives the users the option to search posters and having the option to download them.
+
+The Web App asks the user for a movie to search, after taking the input from the user the app displays all the movie names similar to what the user searched and their corresponding poster images.
+
+Then the user gets the choice to select posters he wants to download.
+
+The Web App was made with Python Flask library to provide the FrontEnd UI and the routing, MongoDB as the BackEnd Database, it is also deployed on AWS Cloud on Docker Containers.
 
 # Architecture:
 
