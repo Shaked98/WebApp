@@ -16,6 +16,11 @@ The Web App was made with Python Flask library to provide the FrontEnd UI and th
 
 ![Webp net-resizeimage (1)](https://user-images.githubusercontent.com/82024584/168759065-004a0604-07d3-4ec1-93d4-85ee3847718f.png)
 
+test
+
+![architecture](https://user-images.githubusercontent.com/82024584/170887165-f47b84c5-c592-49c5-b722-3559bb26e57a.PNG)
+
+
 # Demo:
 
 ![ProjectDemoGIF800](https://user-images.githubusercontent.com/82024584/168753125-3f54a942-a2f2-4795-bf0e-0eb313374416.gif)
