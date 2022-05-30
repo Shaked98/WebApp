@@ -10,11 +10,19 @@ The Web App asks the user for a movie to search, after taking the input from the
 
 Then the user gets the choice to select posters he wants to download.
 
-The Web App was made with Python Flask library to provide the FrontEnd UI and the routing, MongoDB as the BackEnd Database, it is also deployed on AWS Cloud on Docker Containers.
+Python Flask Library provides the routing, HTML provides the Frontend UI.
+
+MongoDB is the local BackEnd Database.
+
+AWS is the cloud provider where the Web App is hosted on.
+
+Docker Containers were used on EC2 to isolate the frontend and backend apps.
+
+Terraform was used to initialize and bring the entire architecture up in AWS Cloud.
 
 # Architecture:
 
-![architecture](https://user-images.githubusercontent.com/82024584/170887165-f47b84c5-c592-49c5-b722-3559bb26e57a.PNG)
+![architecture](https://user-images.githubusercontent.com/82024584/171023006-d66d03b9-9aa2-4ee4-b41f-93d71491816d.PNG)
 
 # Demo:
 
