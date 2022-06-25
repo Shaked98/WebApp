@@ -10,6 +10,9 @@ sudo yum install git -y
 cd /home/ec2-user/
 sudo git clone https://github.com/Shaked98/WebApp.git
 
+#changing dir ownership
+sudo chown ec2-user WebApp/
+
 #Installing docker in EC2
 sudo yum install docker -y
 
